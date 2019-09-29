@@ -11,6 +11,7 @@ import com.pinyougou.pojo.TbGoodsDescExample.Criteria;
 import com.pinyougou.sellergoods.service.GoodsDescService;
 
 import entity.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 服务实现层
@@ -44,7 +45,7 @@ public class GoodsDescServiceImpl implements GoodsDescService {
 	/**
 	 * 增加
 	 */
-	@Override
+	@Transactional
 	public void add(TbGoodsDesc goodsDesc) {
 		goodsDescMapper.insert(goodsDesc);		
 	}
@@ -53,7 +54,7 @@ public class GoodsDescServiceImpl implements GoodsDescService {
 	/**
 	 * 修改
 	 */
-	@Override
+    @Transactional
 	public void update(TbGoodsDesc goodsDesc){
 		goodsDescMapper.updateByPrimaryKey(goodsDesc);
 	}	
@@ -71,7 +72,7 @@ public class GoodsDescServiceImpl implements GoodsDescService {
 	/**
 	 * 批量删除
 	 */
-	@Override
+    @Transactional
 	public void delete(Long[] ids) {
 		for(Long id:ids){
 			goodsDescMapper.deleteByPrimaryKey(id);
@@ -79,7 +80,7 @@ public class GoodsDescServiceImpl implements GoodsDescService {
 	}
 	
 	
-		@Override
+
 	public PageResult findPage(TbGoodsDesc goodsDesc, int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
 		

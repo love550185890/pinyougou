@@ -11,6 +11,7 @@ import com.pinyougou.pojo.TbSpecificationOptionExample.Criteria;
 import com.pinyougou.sellergoods.service.SpecificationOptionService;
 
 import entity.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 服务实现层
@@ -44,7 +45,7 @@ public class SpecificationOptionServiceImpl implements SpecificationOptionServic
 	/**
 	 * 增加
 	 */
-	@Override
+    @Transactional
 	public void add(TbSpecificationOption specificationOption) {
 		specificationOptionMapper.insert(specificationOption);		
 	}
@@ -53,7 +54,7 @@ public class SpecificationOptionServiceImpl implements SpecificationOptionServic
 	/**
 	 * 修改
 	 */
-	@Override
+    @Transactional
 	public void update(TbSpecificationOption specificationOption){
 		specificationOptionMapper.updateByPrimaryKey(specificationOption);
 	}	
@@ -71,15 +72,14 @@ public class SpecificationOptionServiceImpl implements SpecificationOptionServic
 	/**
 	 * 批量删除
 	 */
-	@Override
+    @Transactional
 	public void delete(Long[] ids) {
 		for(Long id:ids){
 			specificationOptionMapper.deleteByPrimaryKey(id);
 		}		
 	}
 	
-	
-		@Override
+
 	public PageResult findPage(TbSpecificationOption specificationOption, int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
 		

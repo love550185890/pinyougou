@@ -17,6 +17,7 @@ import com.pinyougou.pojo.TbTypeTemplateExample.Criteria;
 import com.pinyougou.sellergoods.service.TypeTemplateService;
 
 import entity.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 服务实现层
@@ -50,7 +51,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	/**
 	 * 增加
 	 */
-	@Override
+    @Transactional
 	public void add(TbTypeTemplate typeTemplate) {
 		typeTemplateMapper.insert(typeTemplate);		
 	}
@@ -59,7 +60,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	/**
 	 * 修改
 	 */
-	@Override
+    @Transactional
 	public void update(TbTypeTemplate typeTemplate){
 		typeTemplateMapper.updateByPrimaryKey(typeTemplate);
 	}	
@@ -77,7 +78,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	/**
 	 * 批量删除
 	 */
-	@Override
+    @Transactional
 	public void delete(Long[] ids) {
 		for(Long id:ids){
 			typeTemplateMapper.deleteByPrimaryKey(id);

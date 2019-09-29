@@ -125,7 +125,7 @@ public class GoodsServiceImpl implements GoodsService {
 	/**
 	 * 修改
 	 */
-	@Override
+    @Transactional
 	public void update(Goods goods){
         goodsMapper.updateByPrimaryKey(goods.getGoods());//保存商品表
         goodsDescMapper.updateByPrimaryKey(goods.getGoodsDesc());//保存商品扩展表
@@ -160,6 +160,7 @@ public class GoodsServiceImpl implements GoodsService {
     /**
      * 批量删除
      */
+    @Transactional
     public void delete(Long[] ids) {
         for(Long id:ids){
             TbGoods goods = goodsMapper.selectByPrimaryKey(id);
@@ -208,6 +209,7 @@ public class GoodsServiceImpl implements GoodsService {
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 
+    @Transactional
     public void updateStatus(Long[] ids, String status) {
         for(Long id:ids){
             TbGoods goods = goodsMapper.selectByPrimaryKey(id);

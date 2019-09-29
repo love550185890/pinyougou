@@ -12,6 +12,7 @@ import com.pinyougou.pojo.TbSellerExample.Criteria;
 import com.pinyougou.sellergoods.service.SellerService;
 
 import entity.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 服务实现层
@@ -45,7 +46,7 @@ public class SellerServiceImpl implements SellerService {
 	/**
 	 * 增加
 	 */
-	@Override
+    @Transactional
 	public void add(TbSeller seller) {
         // 0：未审核   1：已审核   2：审核未通过   3：关闭
         seller.setStatus("0");
@@ -57,7 +58,7 @@ public class SellerServiceImpl implements SellerService {
 	/**
 	 * 修改
 	 */
-	@Override
+    @Transactional
 	public void update(TbSeller seller){
 		sellerMapper.updateByPrimaryKey(seller);
 	}	
@@ -75,14 +76,14 @@ public class SellerServiceImpl implements SellerService {
 	/**
 	 * 批量删除
 	 */
+    @Transactional
 	public void delete(String[] ids) {
 		for(String id:ids){
 			sellerMapper.deleteByPrimaryKey(id);
 		}		
 	}
 	
-	
-		@Override
+
 	public PageResult findPage(TbSeller seller, int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
 		
@@ -163,7 +164,7 @@ public class SellerServiceImpl implements SellerService {
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 
-    @Override
+    @Transactional
     public void updateStatus(String sellerId, String status) {
         TbSeller seller = sellerMapper.selectByPrimaryKey(sellerId);
         seller.setStatus(status);

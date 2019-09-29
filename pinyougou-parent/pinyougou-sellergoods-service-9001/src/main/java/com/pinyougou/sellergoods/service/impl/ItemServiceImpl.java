@@ -11,6 +11,7 @@ import com.pinyougou.pojo.TbItemExample.Criteria;
 import com.pinyougou.sellergoods.service.ItemService;
 
 import entity.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 服务实现层
@@ -44,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
 	/**
 	 * 增加
 	 */
-	@Override
+    @Transactional
 	public void add(TbItem item) {
 		itemMapper.insert(item);		
 	}
@@ -53,7 +54,7 @@ public class ItemServiceImpl implements ItemService {
 	/**
 	 * 修改
 	 */
-	@Override
+    @Transactional
 	public void update(TbItem item){
 		itemMapper.updateByPrimaryKey(item);
 	}	
@@ -71,7 +72,7 @@ public class ItemServiceImpl implements ItemService {
 	/**
 	 * 批量删除
 	 */
-	@Override
+    @Transactional
 	public void delete(Long[] ids) {
 		for(Long id:ids){
 			itemMapper.deleteByPrimaryKey(id);
@@ -79,7 +80,6 @@ public class ItemServiceImpl implements ItemService {
 	}
 	
 	
-		@Override
 	public PageResult findPage(TbItem item, int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
 		
