@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.pinyougou.manager</groupId>
-    <artifactId>pinyougou-manager-web</artifactId>
+    <groupId>com.pinyougou.content</groupId>
+    <artifactId>pinyougou-content-service</artifactId>
     <packaging>war</packaging>
     <dependencies>
         <!-- Spring -->
@@ -80,30 +80,20 @@
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- 身份验证 -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.pinyougou.common</groupId>
             <artifactId>pinyougou-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.pinyougou.sellergoods.service</groupId>
-            <artifactId>pinyougou-sellergoods-interface</artifactId>
+            <groupId>com.pinyougou.dao</groupId>
+            <artifactId>pinyougou-dao</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.pinyougou.content</groupId>
             <artifactId>pinyougou-content-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -114,9 +104,10 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <configuration>
                     <path>/</path>
-                    <port>9101</port>
+                    <port>9002</port>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>

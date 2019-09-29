@@ -15,7 +15,8 @@
         <module>pinyougou-sellergoods-service-9001</module>
         <module>pinyougou-manager-web-9101</module>
         <module>pinyougou-shop-web-9102</module>
-
+        <module>pinyougou-content-interface</module>
+        <module>pinyougou-content-service-9002</module>
     </modules>
     <packaging>pom</packaging>
 
