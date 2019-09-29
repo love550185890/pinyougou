@@ -2,7 +2,7 @@ package com.pinyougou.pojo;
 
 import java.io.Serializable;
 
-public class TbContent implements Serializable{
+public class TbContent implements Serializable {
     private Long id;
 
     private Long categoryId;
@@ -12,8 +12,6 @@ public class TbContent implements Serializable{
     private String url;
 
     private String pic;
-
-    private String content;
 
     private String status;
 
@@ -57,14 +55,6 @@ public class TbContent implements Serializable{
 
     public void setPic(String pic) {
         this.pic = pic == null ? null : pic.trim();
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
     }
 
     public String getStatus() {
