@@ -101,4 +101,5 @@ app.controller('contentController' ,function($scope,$controller   ,contentServic
             }
         );
     }
+    $scope.status=["无效","有效"];
 });	
