@@ -17,6 +17,7 @@
         <module>pinyougou-shop-web-9102</module>
         <module>pinyougou-content-interface</module>
         <module>pinyougou-content-service-9002</module>
+        <module>pinyougou-portal-web-9103</module>
     </modules>
     <packaging>pom</packaging>
 
