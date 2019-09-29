@@ -88,4 +88,17 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
             }
         );
     }
+    //更改状态
+    $scope.updateStatus=function(status){
+        goodsService.updateStatus($scope.selectedIds,status).success(
+            function(response){
+                if(response.success){//成功
+                    $scope.reloadList();//刷新列表
+                    $scope.selectedIds=[];//清空ID集合
+                }else{
+                    alert(response.message);
+                }
+            }
+        );
+    }
 });	
