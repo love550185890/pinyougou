@@ -55,11 +55,11 @@ app.controller('contentController' ,function($scope,$controller   ,contentServic
 	//批量删除 
 	$scope.dele=function(){			
 		//获取选中的复选框			
-		contentService.dele( $scope.selectIds ).success(
+		contentService.dele( $scope.selectedIds ).success(
 			function(response){
 				if(response.success){
 					$scope.reloadList();//刷新列表
-					$scope.selectIds=[];
+					$scope.selectedIds=[];
 				}						
 			}		
 		);				

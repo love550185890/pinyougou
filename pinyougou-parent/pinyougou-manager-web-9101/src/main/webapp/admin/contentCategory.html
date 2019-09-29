@@ -67,7 +67,7 @@
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.id)"></td>			                              
+			                              <td><input  type="checkbox" ng-click="selectedCheck($event,entity.id)"></td>
 				                                                       <td>{{entity.id}}</td>			
                              <td>{{entity.name}}</td>			
 		                                 
@@ -82,6 +82,7 @@
                         <!-- 数据表格 /-->
                         <!-- 分页 -->
 						<tm-pagination conf="paginationConf"></tm-pagination>
+                        {{selectedIds}}
                      </div>
                     <!-- /.box-body -->
          
