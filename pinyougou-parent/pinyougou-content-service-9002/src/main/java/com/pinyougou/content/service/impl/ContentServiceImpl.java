@@ -13,6 +13,7 @@ import com.pinyougou.content.service.ContentService;
 
 import entity.PageResult;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 服务实现层
@@ -46,20 +47,28 @@ public class ContentServiceImpl implements ContentService {
 	/**
 	 * 增加
 	 */
-	@Override
+	@Transactional
 	public void add(TbContent content) {
         contentMapper.insert(content);
-
+        //清除缓存
+        redisTemplate.boundHashOps("content").delete(content.getCategoryId());
     }
 
 	
 	/**
 	 * 修改
 	 */
-	@Override
+	@Transactional
 	public void update(TbContent content){
-		contentMapper.updateByPrimaryKey(content);
-	}	
+        //查询修改前的分类Id
+        Long categoryId = contentMapper.selectByPrimaryKey(content.getId()).getCategoryId();
+        redisTemplate.boundHashOps("content").delete(categoryId);
+        contentMapper.updateByPrimaryKey(content);
+        //如果分类ID发生了修改,清除修改后的分类ID的缓存
+        if(categoryId.longValue()!=content.getCategoryId().longValue()){
+            redisTemplate.boundHashOps("content").delete(content.getCategoryId());
+        }
+    }
 	
 	/**
 	 * 根据ID获取实体
@@ -74,9 +83,12 @@ public class ContentServiceImpl implements ContentService {
 	/**
 	 * 批量删除
 	 */
-	@Override
+	@Transactional
 	public void delete(Long[] ids) {
 		for(Long id:ids){
+            //清除缓存
+            Long categoryId = contentMapper.selectByPrimaryKey(id).getCategoryId();//广告分类ID
+            redisTemplate.boundHashOps("content").delete(categoryId);
 			contentMapper.deleteByPrimaryKey(id);
 		}		
 	}
