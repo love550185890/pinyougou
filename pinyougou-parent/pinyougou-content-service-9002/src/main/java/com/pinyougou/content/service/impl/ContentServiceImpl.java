@@ -1,4 +1,5 @@
 package com.pinyougou.content.service.impl;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -11,6 +12,7 @@ import com.pinyougou.pojo.TbContentExample.Criteria;
 import com.pinyougou.content.service.ContentService;
 
 import entity.PageResult;
+import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * 服务实现层
@@ -46,8 +48,9 @@ public class ContentServiceImpl implements ContentService {
 	 */
 	@Override
 	public void add(TbContent content) {
-		contentMapper.insert(content);		
-	}
+        contentMapper.insert(content);
+
+    }
 
 	
 	/**
@@ -106,13 +109,28 @@ public class ContentServiceImpl implements ContentService {
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 
+	@Autowired
+    RedisTemplate redisTemplate;
+
     public List<TbContent> findByCategoryId(Long categoryId) {
-        //根据广告分类ID查询广告列表
-        TbContentExample contentExample=new TbContentExample();
-        Criteria criteria2 = contentExample.createCriteria();
-        criteria2.andCategoryIdEqualTo(categoryId);
-        criteria2.andStatusEqualTo("1");//开启状态
-        contentExample.setOrderByClause("sort_order");//排序
-        return  contentMapper.selectByExample(contentExample);
+        List<TbContent> contentList = (List<TbContent>) redisTemplate.boundHashOps("content").get(categoryId);
+        if(contentList!=null ){
+            //从缓存能查到数据
+            System.out.println("从redis中读取到的contentList = " + contentList);
+        }else{
+            //从数据库查数据
+            //根据广告分类ID查询广告列表
+            System.out.println("从数据库中读取数据。。。");
+            TbContentExample contentExample=new TbContentExample();
+            Criteria criteria2 = contentExample.createCriteria();
+            criteria2.andCategoryIdEqualTo(categoryId);
+            criteria2.andStatusEqualTo("1");//开启状态
+            contentExample.setOrderByClause("sort_order");//排序
+            contentList = contentMapper.selectByExample(contentExample);
+            //存入缓存中
+            redisTemplate.boundHashOps("content").put(categoryId,contentList);
+        }
+
+        return  contentList;
     }
 }

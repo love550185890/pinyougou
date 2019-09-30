@@ -102,6 +102,9 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.pinyougou.pojo.TbContent" >
+      <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+          SELECT LAST_INSERT_ID() AS id
+      </selectKey>
     insert into tb_content (id, category_id, title, 
       url, pic,
       status, sort_order)
