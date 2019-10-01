@@ -1,5 +1,6 @@
 package com.pinyougou.search.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RequestMapping(value = "/itemsearch")
 public class ItemSearchController {
 
-    @Autowired
+    @Reference
     ItemSearchService itemSearchService;
 
     @RequestMapping("/search")
