@@ -14,7 +14,7 @@ import java.util.Map;
  * @Date
  */
 @RestController
-@RequestMapping(value = "/itemSearch")
+@RequestMapping(value = "/itemsearch")
 public class ItemSearchController {
 
     @Autowired
