@@ -18,6 +18,7 @@
         <module>pinyougou-content-interface</module>
         <module>pinyougou-content-service-9002</module>
         <module>pinyougou-portal-web-9103</module>
+        <module>pinyougou-solr-util</module>
     </modules>
     <packaging>pom</packaging>
 
