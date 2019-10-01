@@ -1,5 +1,6 @@
 package com.pinyougou.solrUtil;
 
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.mapper.TbItemMapper;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojo.TbItemExample;
@@ -10,6 +11,7 @@ import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -32,6 +34,9 @@ public class SolrUtils {
         System.out.println("------------------查询的商品列表---开始----------------");
         for (TbItem item : itemList) {
             System.out.println("title= " + item.getTitle()+";price = " + item.getPrice());
+            //设置动态域
+            Map map = JSON.parseObject(item.getSpec());
+            item.setSpecMap(map);
         }
         System.out.println("------------------查询的商品列表---结束----------------");
         //把从mysql中查出来的sku数据导入到索引库
