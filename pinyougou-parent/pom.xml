@@ -21,6 +21,7 @@
         <module>pinyougou-solr-util</module>
         <module>pinyougou-search-interface</module>
         <module>pinyougou-search-service-9004</module>
+        <module>pinyougou-search-web-9104</module>
     </modules>
     <packaging>pom</packaging>
 
