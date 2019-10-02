@@ -5,12 +5,13 @@ import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.SolrTemplate;
-import org.springframework.data.solr.core.query.Criteria;
-import org.springframework.data.solr.core.query.Query;
-import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.*;
+import org.springframework.data.solr.core.query.result.HighlightEntry;
+import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.data.solr.core.query.result.ScoredPage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,11 +28,40 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     @Override
     public Map<String, Object> search(Map searchMap) {
         Map<String, Object> map = new HashMap<>();
-        Query query = new SimpleQuery("*:*");
+//        Query query = new SimpleQuery("*:*");
+//        Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
+//        query.addCriteria(criteria);
+//        ScoredPage<TbItem> tbItems = solrTemplate.queryForPage(query, TbItem.class);
+//        map.put("rows",tbItems.getContent());
+        map.putAll(searchWithHilight(searchMap));
+        return map;
+    }
+
+    /**
+     * 高亮查询
+     * @param searchMap
+     * @return
+     */
+    public Map<String ,Object> searchWithHilight(Map searchMap){
+        Map<String, Object> map = new HashMap<>();
         Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
-        query.addCriteria(criteria);
-        ScoredPage<TbItem> tbItems = solrTemplate.queryForPage(query, TbItem.class);
-        map.put("rows",tbItems.getContent());
+        HighlightQuery query = new SimpleHighlightQuery(criteria);
+        HighlightOptions highLightOptions = new HighlightOptions();
+        highLightOptions.addField("item_title");
+        highLightOptions.setSimplePrefix("<em style='color:red'>");
+        highLightOptions.setSimplePostfix("</em>");
+        query.setHighlightOptions(highLightOptions);
+        HighlightPage<TbItem> itemHighlightPage = solrTemplate.queryForHighlightPage(query, TbItem.class);
+        List<HighlightEntry<TbItem>> highlightEntryList = itemHighlightPage.getHighlighted();//高亮接口
+        for (HighlightEntry<TbItem> entry : highlightEntryList) {
+            TbItem item = entry.getEntity();//获取原实体
+            //entry.getHighlights().get(0);//获取第一个域
+            //entry.getHighlights().get(0).getSnipplets().get(0)//第一域的第一个字段
+            if(entry.getHighlights().size()>0 && entry.getHighlights().get(0).getSnipplets().size()>0){
+                item.setTitle(entry.getHighlights().get(0).getSnipplets().get(0));//设置高亮结果
+            }
+        }
+        map.put("rows", itemHighlightPage.getContent());
         return map;
     }
 }
