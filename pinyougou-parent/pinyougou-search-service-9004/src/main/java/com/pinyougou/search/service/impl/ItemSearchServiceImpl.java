@@ -50,13 +50,37 @@ public class ItemSearchServiceImpl implements ItemSearchService {
      */
     public Map<String ,Object> searchWithHilight(Map searchMap){
         Map<String, Object> map = new HashMap<>();
-        Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
-        HighlightQuery query = new SimpleHighlightQuery(criteria);
+        HighlightQuery query = new SimpleHighlightQuery();
         HighlightOptions highLightOptions = new HighlightOptions();
         highLightOptions.addField("item_title");
         highLightOptions.setSimplePrefix("<em style='color:red'>");
         highLightOptions.setSimplePostfix("</em>");
         query.setHighlightOptions(highLightOptions);
+        Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
+        query.addCriteria(criteria);
+
+        //1.2 按分类筛选
+        if(!"".equals(searchMap.get("category"))){
+            Criteria filterCriteria=new Criteria("item_category").is(searchMap.get("category"));
+            FilterQuery filterQuery=new SimpleFilterQuery(filterCriteria);
+            query.addFilterQuery(filterQuery);
+        }
+        //1.3 按品牌筛选
+        if(!"".equals(searchMap.get("brand"))){
+            Criteria filterCriteria=new Criteria("item_brand").is(searchMap.get("brand"));
+            FilterQuery filterQuery=new SimpleFilterQuery(filterCriteria);
+            query.addFilterQuery(filterQuery);
+        }
+        //1.4 规格过滤
+        if(searchMap.get("spec")!=null){
+            Map<String,String> specMap = (Map)searchMap.get("spec");
+            for(String key :specMap.keySet()){
+                Criteria filterCriteria=new Criteria("item_spec_"+key).is(specMap.get(key));
+                FilterQuery filterQuery=new SimpleFilterQuery(filterCriteria);
+                query.addFilterQuery(filterQuery);
+            }
+        }
+
         HighlightPage<TbItem> itemHighlightPage = solrTemplate.queryForHighlightPage(query, TbItem.class);
         List<HighlightEntry<TbItem>> highlightEntryList = itemHighlightPage.getHighlighted();//高亮接口
         for (HighlightEntry<TbItem> entry : highlightEntryList) {
