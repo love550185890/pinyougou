@@ -114,7 +114,7 @@ public class ItemCatServiceImpl implements ItemCatService {
         List<TbItemCat> list = findAll();
         for(TbItemCat itemCat: list){
             //存入redis中的key是itemCat的name;值是模板id
-            redisTemplate.boundHashOps("categoryList").put(itemCat.getName(),itemCat.getTypeId());
+            redisTemplate.boundHashOps("itemCat").put(itemCat.getName(),itemCat.getTypeId());
             System.out.println("更新缓存:商品分类表");
         }
         return itemCatList;

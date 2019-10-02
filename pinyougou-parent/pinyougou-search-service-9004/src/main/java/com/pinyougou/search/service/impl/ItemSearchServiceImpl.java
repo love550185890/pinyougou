@@ -5,6 +5,7 @@ import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.*;
@@ -34,6 +35,11 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 //        ScoredPage<TbItem> tbItems = solrTemplate.queryForPage(query, TbItem.class);
 //        map.put("rows",tbItems.getContent());
         map.putAll(searchWithHilight(searchMap));
+        List<String> categoryList = searchCategoryList(searchMap);
+        map.put("categoryList",categoryList);
+        if(categoryList.size()>0){
+            map.putAll(searchBrandAndSpecList(categoryList.get(0)));
+        }
         return map;
     }
 
@@ -62,8 +68,6 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             }
         }
         map.put("rows", itemHighlightPage.getContent());
-        List categoryList = searchCategoryList(searchMap);
-        map.put("categoryList",categoryList);
         return map;
     }
 
@@ -87,5 +91,26 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             list.add(entry.getGroupValue());
         }
         return list;
+    }
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    /**
+     * 查询品牌和规格列表
+     * @param category 分类名称
+     * @return
+     */
+    private Map searchBrandAndSpecList(String category){
+        Map map=new HashMap();
+        Long typeId = (Long) redisTemplate.boundHashOps("itemCat").get(category);//获取模板ID
+        if(typeId!=null){
+            //根据模板ID查询品牌列表
+            List brandList = (List) redisTemplate.boundHashOps("brandList").get(typeId);
+            map.put("brandList", brandList);//返回值添加品牌列表
+            //根据模板ID查询规格列表
+            List specList = (List) redisTemplate.boundHashOps("specList").get(typeId);
+            map.put("specList", specList);
+        }
+        return map;
     }
 }
