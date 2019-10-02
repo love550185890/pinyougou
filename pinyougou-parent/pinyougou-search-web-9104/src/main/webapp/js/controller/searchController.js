@@ -1,6 +1,6 @@
 app.controller('searchController',function($scope,searchService){
     //定义搜索变量
-    $scope.searchMap={'keywords':'','category':'','brand':'','spec':{},'price':'','pageNo':1,'pageSize':40};//搜索对象
+    $scope.searchMap={'keywords':'','category':'','brand':'','spec':{},'price':'','pageNo':1,'pageSize':40,'sortField':'','sort':'' };//搜索对象
     //搜索
     $scope.search=function(){
         $scope.searchMap.pageNo= parseInt($scope.searchMap.pageNo) ;
@@ -89,5 +89,19 @@ app.controller('searchController',function($scope,searchService){
             return false;
         }
     }
-
+    //设置排序规则
+    $scope.sortSearch=function(sortField,sort){
+        $scope.searchMap.sortField=sortField;
+        $scope.searchMap.sort=sort;
+        $scope.search();
+    }
+    //判断关键字是不是品牌
+    $scope.keywordsIsBrand=function(){
+        for(var i=0;i<$scope.resultMap.brandList.length;i++){
+            if($scope.searchMap.keywords.indexOf($scope.resultMap.brandList[i].text)>=0){//如果包含
+                return true;
+            }
+        }
+        return false;
+    }
 });
