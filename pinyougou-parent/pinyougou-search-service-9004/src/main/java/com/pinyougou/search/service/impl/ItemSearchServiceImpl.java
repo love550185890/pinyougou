@@ -4,12 +4,12 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
-import org.springframework.data.solr.core.query.result.HighlightEntry;
-import org.springframework.data.solr.core.query.result.HighlightPage;
-import org.springframework.data.solr.core.query.result.ScoredPage;
+import org.springframework.data.solr.core.query.result.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +62,30 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             }
         }
         map.put("rows", itemHighlightPage.getContent());
+        List categoryList = searchCategoryList(searchMap);
+        map.put("categoryList",categoryList);
         return map;
+    }
+
+    /**
+     * 类目查询
+     * @return
+     */
+    public List searchCategoryList(Map searchMap){
+        List<String> list=new ArrayList();
+        Query query = new SimpleQuery("*:*");
+        Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
+        query.addCriteria(criteria);
+        GroupOptions groupOptions = new GroupOptions();
+        groupOptions.addGroupByField("item_category");
+        query.setGroupOptions(groupOptions);
+        GroupPage<TbItem> itemGroupPage = solrTemplate.queryForGroupPage(query, TbItem.class);
+        GroupResult<TbItem> groupResult = itemGroupPage.getGroupResult("item_category");
+        Page<GroupEntry<TbItem>> groupEntries = groupResult.getGroupEntries();
+        List<GroupEntry<TbItem>> groupEntryList = groupEntries.getContent();
+        for (GroupEntry<TbItem> entry : groupEntryList) {
+            list.add(entry.getGroupValue());
+        }
+        return list;
     }
 }
